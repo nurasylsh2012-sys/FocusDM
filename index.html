@@ -4308,6 +4308,797 @@ if (
 }
 
 </script>
+<!-- =========================================
+     FOCUSDM INSTAGRAM CONNECTION
+     Paste this entire block before </body>
+========================================= -->
 
+<style>
+
+.instagram-connect-card {
+    margin-top: 24px;
+    padding: 20px;
+
+    border: 1px solid var(--border);
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(131, 58, 180, 0.13),
+            rgba(225, 48, 108, 0.07),
+            rgba(247, 119, 55, 0.04)
+        );
+}
+
+.instagram-connect-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.instagram-connect-icon {
+    width: 50px;
+    height: 50px;
+
+    flex-shrink: 0;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #833ab4,
+            #e1306c,
+            #f77737
+        );
+
+    color: white;
+
+    font-size: 27px;
+    font-weight: 800;
+
+    box-shadow:
+        0 8px 25px rgba(225, 48, 108, 0.2);
+}
+
+.instagram-connect-info {
+    min-width: 0;
+}
+
+.instagram-connect-title {
+    font-size: 15px;
+    font-weight: 750;
+}
+
+.instagram-connect-description {
+    margin-top: 4px;
+
+    color: var(--muted);
+
+    font-size: 11px;
+    line-height: 1.45;
+}
+
+.instagram-connect-button {
+    width: 100%;
+    height: 44px;
+
+    margin-top: 16px;
+
+    border: 0;
+    border-radius: 11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #833ab4,
+            #e1306c,
+            #f77737
+        );
+
+    color: white;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform .2s,
+        filter .2s;
+}
+
+.instagram-connect-button:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.08);
+}
+
+.instagram-connected {
+    display: none;
+
+    margin-top: 12px;
+
+    padding: 10px 12px;
+
+    border-radius: 10px;
+
+    background: rgba(34, 197, 94, 0.08);
+
+    border: 1px solid rgba(34, 197, 94, 0.15);
+
+    color: #86efac;
+
+    font-size: 11px;
+}
+
+
+/* =========================================
+   INSTAGRAM MODAL
+========================================= */
+
+.instagram-modal {
+    position: fixed;
+
+    inset: 0;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    z-index: 9999;
+}
+
+.instagram-modal.active {
+    display: flex;
+}
+
+.instagram-modal-backdrop {
+    position: absolute;
+
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.78);
+
+    backdrop-filter: blur(14px);
+}
+
+.instagram-modal-box {
+    position: relative;
+
+    z-index: 2;
+
+    width: min(430px, 100%);
+
+    padding: 32px 26px 25px;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.1);
+
+    border-radius: 24px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #18131d,
+            #0f0f13
+        );
+
+    box-shadow:
+        0 30px 100px rgba(0,0,0,0.65);
+
+    text-align: center;
+
+    animation:
+        instagramModalIn
+        .2s
+        ease;
+}
+
+@keyframes instagramModalIn {
+
+    from {
+        opacity: 0;
+        transform:
+            translateY(12px)
+            scale(.97);
+    }
+
+    to {
+        opacity: 1;
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+.instagram-modal-close {
+    position: absolute;
+
+    top: 13px;
+    right: 13px;
+
+    width: 35px;
+    height: 35px;
+
+    display: grid;
+    place-items: center;
+
+    border: 0;
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,0.06);
+
+    color: #aaa;
+
+    font-size: 22px;
+
+    cursor: pointer;
+}
+
+.instagram-modal-close:hover {
+    background:
+        rgba(255,255,255,0.1);
+
+    color: white;
+}
+
+.instagram-modal-logo {
+    width: 76px;
+    height: 76px;
+
+    margin: 2px auto 19px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 23px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #833ab4,
+            #e1306c,
+            #f77737
+        );
+
+    color: white;
+
+    font-size: 40px;
+    font-weight: 800;
+
+    box-shadow:
+        0 14px 40px rgba(225,48,108,.25);
+}
+
+.instagram-modal-box h2 {
+    margin: 0;
+
+    font-size: 25px;
+}
+
+.instagram-modal-description {
+    max-width: 340px;
+
+    margin: 10px auto 23px;
+
+    color: var(--muted);
+
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+.instagram-security {
+    display: flex;
+
+    gap: 12px;
+
+    margin-top: 9px;
+
+    padding: 13px;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.06);
+
+    border-radius: 13px;
+
+    background:
+        rgba(255,255,255,0.035);
+
+    text-align: left;
+}
+
+.instagram-security-icon {
+    width: 26px;
+    height: 26px;
+
+    flex-shrink: 0;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 50%;
+
+    background:
+        rgba(139,92,246,.15);
+
+    color:
+        #a78bfa;
+
+    font-size: 12px;
+}
+
+.instagram-security strong {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: white;
+
+    font-size: 12px;
+}
+
+.instagram-security span {
+    display: block;
+
+    color: #85858d;
+
+    font-size: 10px;
+
+    line-height: 1.45;
+}
+
+.instagram-authorize {
+    width: 100%;
+    height: 47px;
+
+    margin-top: 22px;
+
+    border: 0;
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #833ab4,
+            #e1306c,
+            #f77737
+        );
+
+    color: white;
+
+    font-size: 13px;
+    font-weight: 750;
+
+    cursor: pointer;
+
+    transition:
+        transform .2s,
+        filter .2s;
+}
+
+.instagram-authorize:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.08);
+}
+
+.instagram-cancel {
+    width: 100%;
+    height: 42px;
+
+    margin-top: 7px;
+
+    border: 0;
+    border-radius: 11px;
+
+    background: transparent;
+
+    color: #85858d;
+
+    font-size: 12px;
+
+    cursor: pointer;
+}
+
+.instagram-cancel:hover {
+    color: white;
+}
+
+.instagram-modal-note {
+    margin-top: 14px;
+
+    color: #5e5e66;
+
+    font-size: 9px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+
+    .instagram-modal {
+        padding: 14px;
+    }
+
+    .instagram-modal-box {
+        padding:
+            30px
+            19px
+            22px;
+
+        border-radius: 21px;
+    }
+
+    .instagram-modal-logo {
+        width: 68px;
+        height: 68px;
+
+        font-size: 35px;
+    }
+
+}
+
+</style>
+
+
+<!-- =========================================
+     INSTAGRAM MODAL
+========================================= -->
+
+<div
+    id="instagram-modal"
+    class="instagram-modal"
+>
+
+    <div
+        class="instagram-modal-backdrop"
+        onclick="closeInstagramModal()"
+    ></div>
+
+
+    <div class="instagram-modal-box">
+
+        <button
+            class="instagram-modal-close"
+            onclick="closeInstagramModal()"
+        >
+            ×
+        </button>
+
+
+        <div class="instagram-modal-logo">
+            ◎
+        </div>
+
+
+        <h2>
+            Connect Instagram
+        </h2>
+
+
+        <div class="instagram-modal-description">
+
+            Connect your Instagram account
+            to FocusDM through an official
+            authorization flow.
+
+        </div>
+
+
+        <div class="instagram-security">
+
+            <div class="instagram-security-icon">
+                ✓
+            </div>
+
+            <div>
+
+                <strong>
+                    No Instagram password
+                </strong>
+
+                <span>
+                    FocusDM will never ask you
+                    to enter your Instagram password.
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="instagram-security">
+
+            <div class="instagram-security-icon">
+                ✓
+            </div>
+
+            <div>
+
+                <strong>
+                    Secure authorization
+                </strong>
+
+                <span>
+                    Instagram authorization will
+                    happen through the official Meta flow.
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="instagram-authorize"
+            onclick="startInstagramOAuth()"
+        >
+            Continue with Instagram
+        </button>
+
+
+        <button
+            class="instagram-cancel"
+            onclick="closeInstagramModal()"
+        >
+            Cancel
+        </button>
+
+
+        <div class="instagram-modal-note">
+
+            Available Instagram features depend
+            on Meta's current API permissions
+            and your account type.
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================
+   INSTAGRAM UI
+========================================= */
+
+function createInstagramCard() {
+
+    const profilePage =
+        document.querySelector(
+            "#profile-page .profile-page"
+        );
+
+
+    if (!profilePage)
+        return;
+
+
+    if (
+        document.getElementById(
+            "instagram-connect-card"
+        )
+    )
+        return;
+
+
+    const card =
+        document.createElement("div");
+
+
+    card.id =
+        "instagram-connect-card";
+
+
+    card.className =
+        "instagram-connect-card";
+
+
+    card.innerHTML = `
+
+        <div class="instagram-connect-top">
+
+            <div class="instagram-connect-icon">
+                ◎
+            </div>
+
+
+            <div class="instagram-connect-info">
+
+                <div class="instagram-connect-title">
+                    Instagram
+                </div>
+
+                <div class="instagram-connect-description">
+                    Connect Instagram to FocusDM
+                    through official authorization.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="instagram-connect-button"
+            onclick="openInstagramModal()"
+        >
+            Connect Instagram
+        </button>
+
+
+        <div
+            id="instagram-connected"
+            class="instagram-connected"
+        >
+            Instagram connection ready.
+        </div>
+
+    `;
+
+
+    profilePage.appendChild(card);
+
+}
+
+
+function openInstagramModal() {
+
+    const modal =
+        document.getElementById(
+            "instagram-modal"
+        );
+
+
+    if (!modal)
+        return;
+
+
+    modal.classList.add(
+        "active"
+    );
+
+
+    document.body.style.overflow =
+        "hidden";
+
+}
+
+
+function closeInstagramModal() {
+
+    const modal =
+        document.getElementById(
+            "instagram-modal"
+        );
+
+
+    if (!modal)
+        return;
+
+
+    modal.classList.remove(
+        "active"
+    );
+
+
+    document.body.style.overflow =
+        "";
+
+}
+
+
+/* =========================================
+   INSTAGRAM OAUTH PLACEHOLDER
+========================================= */
+
+function startInstagramOAuth() {
+
+    closeInstagramModal();
+
+
+    showToast(
+        "Instagram OAuth will be connected through the official Meta flow."
+    );
+
+}
+
+
+/* =========================================
+   REPLACE OLD INSTAGRAM LOGIN
+========================================= */
+
+function instagramLogin() {
+
+    openInstagramModal();
+
+}
+
+
+/* =========================================
+   ESC KEY
+========================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            closeInstagramModal();
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   ADD CARD AFTER APP LOAD
+========================================= */
+
+function initializeInstagramUI() {
+
+    createInstagramCard();
+
+}
+
+
+/* =========================================
+   WATCH FOR APP
+========================================= */
+
+setTimeout(
+    initializeInstagramUI,
+    500
+);
+
+
+/* =========================================
+   ALSO ADD AFTER LOGIN
+========================================= */
+
+const originalInitializeApp =
+    window.initializeApp;
+
+
+if (
+    typeof originalInitializeApp ===
+    "function"
+) {
+
+    window.initializeApp =
+        async function() {
+
+            await originalInitializeApp();
+
+            setTimeout(
+                initializeInstagramUI,
+                200
+            );
+
+        };
+
+}
+
+</script>
 </body>
 </html>
