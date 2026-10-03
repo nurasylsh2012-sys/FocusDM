@@ -1,0 +1,4313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+>
+
+<meta
+    name="theme-color"
+    content="#09090b"
+>
+
+<meta
+    name="description"
+    content="FocusDM — stay connected without distraction."
+>
+
+<link
+    rel="manifest"
+    href="manifest.json"
+>
+
+<title>FocusDM</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    background: #09090b;
+    color: #f5f5f7;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+input {
+    outline: none;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* =====================================
+   VARIABLES
+===================================== */
+
+:root {
+    --bg: #09090b;
+    --surface: #111114;
+    --surface-2: #18181d;
+    --surface-3: #222229;
+
+    --border: #29292f;
+
+    --text: #f5f5f7;
+    --muted: #96969f;
+
+    --accent: #8b5cf6;
+    --accent-hover: #7c3aed;
+
+    --green: #22c55e;
+    --red: #ef4444;
+}
+
+/* =====================================
+   AUTH
+===================================== */
+
+#auth {
+    min-height: 100%;
+    display: grid;
+    place-items: center;
+
+    padding: 20px;
+
+    background:
+        radial-gradient(
+            circle at 50% 0,
+            #8b5cf633,
+            transparent 42%
+        ),
+        var(--bg);
+}
+
+.auth-box {
+    width: min(390px, 100%);
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo-mark {
+    width: 52px;
+    height: 52px;
+
+    margin: 0 auto 14px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 15px;
+
+    background: var(--accent);
+
+    font-weight: 800;
+    font-size: 20px;
+}
+
+.logo h1 {
+    margin: 0;
+    font-size: 30px;
+}
+
+.logo p {
+    margin-top: 7px;
+
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+.auth-form {
+    display: grid;
+    gap: 10px;
+}
+
+.input {
+    width: 100%;
+    height: 50px;
+
+    padding: 0 14px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 12px;
+
+    background: var(--surface);
+    color: var(--text);
+}
+
+.input:focus {
+    border-color: #8b5cf699;
+}
+
+.primary {
+    height: 50px;
+
+    border: 0;
+    border-radius: 12px;
+
+    background: var(--accent);
+
+    color: white;
+
+    font-weight: 700;
+}
+
+.primary:hover {
+    background: var(--accent-hover);
+}
+
+.secondary {
+    height: 50px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 12px;
+
+    background: var(--surface);
+
+    color: var(--text);
+}
+
+.switch {
+    text-align: center;
+
+    margin-top: 14px;
+
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+.link {
+    border: 0;
+    background: transparent;
+
+    color: var(--accent);
+}
+
+/* =====================================
+   APP
+===================================== */
+
+#app {
+    display: none;
+
+    height: 100%;
+}
+
+.shell {
+    display: flex;
+
+    width: 100%;
+    height: 100%;
+}
+
+/* =====================================
+   SIDEBAR
+===================================== */
+
+.sidebar {
+    width: 235px;
+
+    padding: 22px 12px;
+
+    display: flex;
+    flex-direction: column;
+
+    border-right:
+        1px solid
+        var(--border);
+
+    background: #0c0c0f;
+}
+
+.brand {
+    padding: 4px 12px 28px;
+
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.brand span {
+    color: var(--accent);
+}
+
+.nav {
+    display: grid;
+    gap: 4px;
+}
+
+.nav button {
+    height: 44px;
+
+    border: 0;
+    border-radius: 11px;
+
+    background: transparent;
+
+    color: var(--muted);
+
+    text-align: left;
+
+    padding: 0 13px;
+}
+
+.nav button:hover,
+.nav button.active {
+    background: var(--surface-2);
+    color: var(--text);
+}
+
+.logout {
+    margin-top: auto;
+
+    color: #f87171 !important;
+}
+
+/* =====================================
+   MAIN
+===================================== */
+
+.main {
+    flex: 1;
+
+    min-width: 0;
+
+    height: 100%;
+}
+
+.page {
+    display: none;
+
+    width: 100%;
+    height: 100%;
+}
+
+.page.active {
+    display: flex;
+}
+
+/* =====================================
+   MESSAGES
+===================================== */
+
+.chat-layout {
+    display: flex;
+
+    width: 100%;
+    height: 100%;
+}
+
+.chat-list {
+    width: 350px;
+
+    display: flex;
+    flex-direction: column;
+
+    border-right:
+        1px solid
+        var(--border);
+}
+
+.chat-header {
+    padding: 24px 20px 14px;
+}
+
+.chat-header h2 {
+    margin: 0;
+
+    font-size: 25px;
+}
+
+.chat-header p {
+    margin: 5px 0 0;
+
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+.search {
+    padding: 0 14px 10px;
+}
+
+.search input {
+    width: 100%;
+    height: 42px;
+
+    padding: 0 13px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 10px;
+
+    background: var(--surface);
+
+    color: var(--text);
+}
+
+.chat-items {
+    overflow-y: auto;
+
+    padding: 2px 7px;
+}
+
+.chat-item {
+    display: flex;
+    gap: 11px;
+
+    padding: 11px 8px;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+}
+
+.chat-item:hover,
+.chat-item.active {
+    background: var(--surface-2);
+}
+
+/* =====================================
+   AVATAR
+===================================== */
+
+.avatar {
+    position: relative;
+
+    flex: 0 0 44px;
+
+    width: 44px;
+    height: 44px;
+
+    display: grid;
+    place-items: center;
+
+    overflow: hidden;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8b5cf6,
+            #4c1d95
+        );
+
+    font-weight: 700;
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.online-dot {
+    position: absolute;
+
+    right: 0;
+    bottom: 1px;
+
+    width: 10px;
+    height: 10px;
+
+    border-radius: 50%;
+
+    background: var(--green);
+
+    border:
+        2px solid
+        var(--bg);
+}
+
+/* =====================================
+   CHAT INFO
+===================================== */
+
+.chat-info {
+    min-width: 0;
+
+    flex: 1;
+}
+
+.chat-top {
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 8px;
+}
+
+.chat-name {
+    overflow: hidden;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    font-size: 14px;
+    font-weight: 650;
+}
+
+.chat-time {
+    color: var(--muted);
+
+    font-size: 10px;
+}
+
+.chat-preview {
+    margin-top: 4px;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+/* =====================================
+   MESSAGE PANEL
+===================================== */
+
+.messages-panel {
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.messages-head {
+    height: 70px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 18px;
+
+    border-bottom:
+        1px solid
+        var(--border);
+}
+
+.back-button {
+    display: none;
+
+    border: 0;
+    background: transparent;
+
+    color: white;
+
+    font-size: 28px;
+}
+
+.chat-title {
+    margin-left: 10px;
+}
+
+.chat-title b {
+    display: block;
+
+    font-size: 14px;
+}
+
+.status {
+    margin-top: 3px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+}
+
+.status.online {
+    color: var(--green);
+}
+
+/* =====================================
+   MESSAGE AREA
+===================================== */
+
+.messages {
+    flex: 1;
+
+    overflow-y: auto;
+
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.message-row {
+    display: flex;
+}
+
+.message-row.mine {
+    justify-content: flex-end;
+}
+
+.message-wrap {
+    position: relative;
+
+    max-width: min(72%, 520px);
+}
+
+.message-bubble {
+    padding: 9px 12px;
+
+    border-radius: 15px;
+
+    background: var(--surface-2);
+
+    font-size: 13px;
+    line-height: 1.45;
+
+    word-break: break-word;
+}
+
+.mine .message-bubble {
+    background: var(--accent);
+}
+
+.message-time {
+    display: block;
+
+    margin-top: 4px;
+
+    text-align: right;
+
+    font-size: 9px;
+
+    opacity: .55;
+}
+
+.message-seen {
+    margin-top: 2px;
+
+    text-align: right;
+
+    color: var(--muted);
+
+    font-size: 9px;
+}
+
+.message-image {
+    display: block;
+
+    max-width: 280px;
+    max-height: 360px;
+
+    border-radius: 10px;
+
+    object-fit: cover;
+}
+
+.message-actions {
+    position: absolute;
+
+    right: 0;
+    bottom: calc(100% + 4px);
+
+    display: none;
+
+    padding: 3px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 9px;
+
+    background: #1b1b20;
+}
+
+.message-wrap:hover
+.message-actions {
+    display: flex;
+}
+
+.message-actions button {
+    padding: 6px;
+
+    border: 0;
+
+    background: transparent;
+
+    color: #ddd;
+}
+
+/* =====================================
+   COMPOSER
+===================================== */
+
+.typing {
+    height: 18px;
+
+    padding: 0 18px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+}
+
+.composer {
+    display: flex;
+    gap: 8px;
+
+    padding: 9px 15px;
+
+    border-top:
+        1px solid
+        var(--border);
+}
+
+.composer input[type="text"] {
+    flex: 1;
+
+    height: 45px;
+
+    padding: 0 13px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 12px;
+
+    background: var(--surface);
+
+    color: white;
+}
+
+.icon-button {
+    width: 44px;
+    height: 44px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 12px;
+
+    background: var(--surface);
+
+    color: #ddd;
+}
+
+.send-button {
+    background: var(--accent);
+
+    border-color:
+        var(--accent);
+
+    color: white;
+}
+
+/* =====================================
+   EMPTY
+===================================== */
+
+.empty {
+    margin: auto;
+
+    text-align: center;
+
+    color: var(--muted);
+}
+
+.empty strong {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--text);
+
+    font-size: 15px;
+}
+
+.empty span {
+    font-size: 12px;
+}
+
+/* =====================================
+   FOCUS
+===================================== */
+
+.focus-page,
+.profile-page {
+    width: min(850px, 100%);
+
+    margin: auto;
+
+    padding: 34px 25px;
+}
+
+.focus-page h1 {
+    margin: 0;
+
+    font-size: 30px;
+}
+
+.subtitle {
+    margin-top: 6px;
+
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+.focus-card {
+    margin-top: 26px;
+
+    padding: 24px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 15px;
+
+    background: var(--surface);
+}
+
+.timer {
+    margin-top: 10px;
+
+    font-size: 38px;
+    font-weight: 800;
+}
+
+.focus-button {
+    width: 100%;
+    height: 46px;
+
+    margin-top: 18px;
+
+    border: 0;
+
+    border-radius: 11px;
+
+    background: var(--accent);
+
+    color: white;
+
+    font-weight: 700;
+}
+
+.focus-button.stop {
+    background: var(--red);
+}
+
+.stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 10px;
+
+    margin-top: 10px;
+}
+
+.stat {
+    padding: 17px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 15px;
+
+    background: var(--surface);
+}
+
+.stat b {
+    font-size: 22px;
+}
+
+.stat small {
+    display: block;
+
+    margin-top: 4px;
+
+    color: var(--muted);
+}
+
+/* =====================================
+   PROFILE
+===================================== */
+
+.profile-top {
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+
+    padding-bottom: 22px;
+
+    border-bottom:
+        1px solid
+        var(--border);
+}
+
+.profile-avatar {
+    width: 72px;
+    height: 72px;
+
+    overflow: hidden;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 50%;
+
+    background: var(--accent);
+
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.profile-name {
+    font-size: 19px;
+    font-weight: 750;
+}
+
+.username {
+    margin-top: 3px;
+
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+.profile-section {
+    margin-top: 24px;
+}
+
+.profile-section h3 {
+    font-size: 13px;
+}
+
+.profile-section input {
+    width: 100%;
+    height: 46px;
+
+    margin-top: 8px;
+
+    padding: 0 13px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 11px;
+
+    background: var(--surface);
+
+    color: white;
+}
+
+.upload-button {
+    display: inline-block;
+
+    margin-top: 10px;
+
+    padding: 9px 13px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 9px;
+
+    background: var(--surface-2);
+
+    font-size: 12px;
+}
+
+.upload-button input {
+    display: none;
+}
+
+/* =====================================
+   MOBILE
+===================================== */
+
+.mobile-nav {
+    display: none;
+}
+
+@media (max-width: 700px) {
+
+    body {
+        overflow: hidden;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .main {
+        height:
+            calc(100% - 67px);
+    }
+
+    .mobile-nav {
+        position: fixed;
+
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        height: 67px;
+
+        display: flex;
+
+        padding-bottom:
+            env(safe-area-inset-bottom);
+
+        background: #0b0b0eee;
+
+        backdrop-filter: blur(18px);
+
+        border-top:
+            1px solid
+            var(--border);
+
+        z-index: 300;
+    }
+
+    .mobile-nav button {
+        flex: 1;
+
+        border: 0;
+
+        background: transparent;
+
+        color: var(--muted);
+
+        font-size: 10px;
+    }
+
+    .mobile-nav button.active {
+        color: var(--accent);
+    }
+
+    .mobile-nav b {
+        display: block;
+
+        margin-bottom: 3px;
+
+        font-size: 17px;
+    }
+
+    .chat-list {
+        width: 100%;
+
+        height: 100%;
+
+        border: 0;
+    }
+
+    .chat-header {
+        padding: 18px 16px 12px;
+    }
+
+    .chat-header h2 {
+        font-size: 27px;
+    }
+
+    .messages-panel {
+        position: fixed;
+
+        inset: 0;
+
+        display: none;
+
+        z-index: 250;
+
+        padding-bottom: 67px;
+
+        background: var(--bg);
+    }
+
+    .messages-panel.open {
+        display: flex;
+    }
+
+    .back-button {
+        display: block;
+
+        margin-right: 5px;
+    }
+
+    .messages {
+        padding: 14px 11px;
+    }
+
+    .message-wrap {
+        max-width: 84%;
+    }
+
+    .composer {
+        padding:
+            8px
+            8px
+            calc(8px + env(safe-area-inset-bottom));
+    }
+
+    .focus-page,
+    .profile-page {
+        padding: 25px 16px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- =========================================
+     AUTH
+========================================= -->
+
+<div id="auth">
+
+    <div class="auth-box">
+
+        <div class="logo">
+
+            <div class="logo-mark">
+                F
+            </div>
+
+            <h1>
+                FocusDM
+            </h1>
+
+            <p>
+                Stay connected without distraction.
+            </p>
+
+        </div>
+
+        <!-- LOGIN -->
+
+        <div
+            id="login-form"
+            class="auth-form"
+        >
+
+            <input
+                id="login-email"
+                class="input"
+                type="email"
+                placeholder="Email"
+            >
+
+            <input
+                id="login-password"
+                class="input"
+                type="password"
+                placeholder="Password"
+            >
+
+            <button
+                class="primary"
+                onclick="login()"
+            >
+                Sign in
+            </button>
+
+            <button
+                class="secondary"
+                onclick="instagramLogin()"
+            >
+                Continue with Instagram
+            </button>
+
+            <div class="switch">
+
+                No account?
+
+                <button
+                    class="link"
+                    onclick="showRegister()"
+                >
+                    Create account
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- REGISTER -->
+
+        <div
+            id="register-form"
+            class="auth-form hidden"
+        >
+
+            <input
+                id="register-username"
+                class="input"
+                placeholder="Username"
+            >
+
+            <input
+                id="register-email"
+                class="input"
+                type="email"
+                placeholder="Email"
+            >
+
+            <input
+                id="register-password"
+                class="input"
+                type="password"
+                placeholder="Password"
+            >
+
+            <button
+                class="primary"
+                onclick="register()"
+            >
+                Create account
+            </button>
+
+            <div class="switch">
+
+                Already have an account?
+
+                <button
+                    class="link"
+                    onclick="showLogin()"
+                >
+                    Sign in
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     APP
+========================================= -->
+
+<div id="app">
+
+    <div class="shell">
+
+        <!-- SIDEBAR -->
+
+        <aside class="sidebar">
+
+            <div class="brand">
+                Focus<span>DM</span>
+            </div>
+
+            <div class="nav">
+
+                <button
+                    class="active"
+                    data-page="messages-page"
+                    onclick="navigate('messages-page')"
+                >
+                    Messages
+                </button>
+
+                <button
+                    data-page="focus-page"
+                    onclick="navigate('focus-page')"
+                >
+                    Focus
+                </button>
+
+                <button
+                    data-page="profile-page"
+                    onclick="navigate('profile-page')"
+                >
+                    Profile
+                </button>
+
+            </div>
+
+            <button
+                class="nav logout"
+                onclick="logout()"
+            >
+                Log out
+            </button>
+
+        </aside>
+
+
+        <main class="main">
+
+            <!-- =====================================
+                 MESSAGES PAGE
+            ====================================== -->
+
+            <section
+                id="messages-page"
+                class="page active"
+            >
+
+                <div class="chat-layout">
+
+                    <!-- CHAT LIST -->
+
+                    <div class="chat-list">
+
+                        <div class="chat-header">
+
+                            <h2>
+                                Messages
+                            </h2>
+
+                            <p>
+                                Direct conversations only.
+                            </p>
+
+                        </div>
+
+                        <div class="search">
+
+                            <input
+                                id="user-search"
+                                placeholder="Search username"
+                                oninput="searchUsers()"
+                            >
+
+                        </div>
+
+                        <div
+                            id="chat-items"
+                            class="chat-items"
+                        ></div>
+
+                    </div>
+
+
+                    <!-- MESSAGE PANEL -->
+
+                    <div
+                        id="messages-panel"
+                        class="messages-panel"
+                    >
+
+                        <div class="messages-head">
+
+                            <button
+                                class="back-button"
+                                onclick="closeChat()"
+                            >
+                                ‹
+                            </button>
+
+                            <div
+                                id="chat-avatar"
+                                class="avatar"
+                            >
+                                ?
+                            </div>
+
+                            <div class="chat-title">
+
+                                <b id="chat-name">
+                                    Select a conversation
+                                </b>
+
+                                <div
+                                    id="chat-status"
+                                    class="status"
+                                >
+                                    —
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            id="messages"
+                            class="messages"
+                        >
+
+                            <div class="empty">
+
+                                <strong>
+                                    Your conversations
+                                </strong>
+
+                                <span>
+                                    Select a person to start messaging.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            id="typing"
+                            class="typing"
+                        ></div>
+
+
+                        <div class="composer">
+
+                            <label class="icon-button">
+
+                                +
+
+                                <input
+                                    id="image-input"
+                                    type="file"
+                                    accept="image/*"
+                                    hidden
+                                    onchange="sendImage()"
+                                >
+
+                            </label>
+
+                            <input
+                                id="message-input"
+                                type="text"
+                                placeholder="Write a message"
+                                oninput="sendTyping()"
+                                onkeydown="handleMessageKey(event)"
+                            >
+
+                            <button
+                                class="icon-button send-button"
+                                onclick="sendMessage()"
+                            >
+                                ↑
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 FOCUS PAGE
+            ====================================== -->
+
+            <section
+                id="focus-page"
+                class="page"
+            >
+
+                <div class="focus-page">
+
+                    <h1>
+                        Focus
+                    </h1>
+
+                    <div class="subtitle">
+                        Messaging without an infinite feed.
+                    </div>
+
+                    <div class="focus-card">
+
+                        <b>
+                            Focus session
+                        </b>
+
+                        <div
+                            id="timer"
+                            class="timer"
+                        >
+                            00:00:00
+                        </div>
+
+                        <div class="subtitle">
+                            Active focus time
+                        </div>
+
+                        <button
+                            id="focus-button"
+                            class="focus-button"
+                            onclick="toggleFocus()"
+                        >
+                            Start focus mode
+                        </button>
+
+                    </div>
+
+                    <div class="stats">
+
+                        <div class="stat">
+
+                            <b id="today-messages">
+                                0
+                            </b>
+
+                            <small>
+                                Messages today
+                            </small>
+
+                        </div>
+
+                        <div class="stat">
+
+                            <b id="conversation-count">
+                                0
+                            </b>
+
+                            <small>
+                                Conversations
+                            </small>
+
+                        </div>
+
+                        <div class="stat">
+
+                            <b id="focus-sessions">
+                                0
+                            </b>
+
+                            <small>
+                                Focus sessions
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 PROFILE PAGE
+            ====================================== -->
+
+            <section
+                id="profile-page"
+                class="page"
+            >
+
+                <div class="profile-page">
+
+                    <div class="profile-top">
+
+                        <div
+                            id="profile-avatar"
+                            class="profile-avatar"
+                        >
+                            ?
+                        </div>
+
+                        <div>
+
+                            <div
+                                id="profile-name"
+                                class="profile-name"
+                            >
+                                User
+                            </div>
+
+                            <div
+                                id="profile-username"
+                                class="username"
+                            >
+                                @username
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="profile-section">
+
+                        <h3>
+                            Profile
+                        </h3>
+
+                        <input
+                            id="profile-display-name"
+                            placeholder="Display name"
+                        >
+
+                        <input
+                            id="profile-bio"
+                            placeholder="Bio"
+                        >
+
+                        <label class="upload-button">
+
+                            Change avatar
+
+                            <input
+                                id="avatar-input"
+                                type="file"
+                                accept="image/*"
+                                onchange="uploadAvatar()"
+                            >
+
+                        </label>
+
+                        <button
+                            class="primary"
+                            style="width:100%;margin-top:12px"
+                            onclick="saveProfile()"
+                        >
+                            Save changes
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- MOBILE NAV -->
+
+    <nav class="mobile-nav">
+
+        <button
+            class="active"
+            data-page="messages-page"
+            onclick="navigate('messages-page')"
+        >
+
+            <b>
+                M
+            </b>
+
+            Messages
+
+        </button>
+
+        <button
+            data-page="focus-page"
+            onclick="navigate('focus-page')"
+        >
+
+            <b>
+                F
+            </b>
+
+            Focus
+
+        </button>
+
+        <button
+            data-page="profile-page"
+            onclick="navigate('profile-page')"
+        >
+
+            <b>
+                P
+            </b>
+
+            Profile
+
+        </button>
+
+    </nav>
+
+</div>
+
+
+<div
+    id="toast"
+    style="
+        position:fixed;
+        left:50%;
+        bottom:22px;
+        transform:translate(-50%,20px);
+        opacity:0;
+        background:#222229;
+        border:1px solid #29292f;
+        padding:10px 14px;
+        border-radius:10px;
+        font-size:11px;
+        transition:.2s;
+        z-index:1000;
+    "
+></div>
+
+
+<script>
+
+/* =========================================
+   CONFIG
+========================================= */
+
+const SUPABASE_URL =
+    "https://tlhbigyyvdnyysppguau.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_V1oUp36qyZn3k9cwsdYuQg_bcNV4Qyj";
+
+const supabaseClient =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+/* =========================================
+   STATE
+========================================= */
+
+let currentUser = null;
+let currentProfile = null;
+
+let currentConversation = null;
+let currentOtherUser = null;
+
+let realtimeChannel = null;
+
+let typingTimeout = null;
+let isTyping = false;
+
+let focusActive = false;
+let focusStart = 0;
+let focusInterval = null;
+
+
+/* =========================================
+   HELPERS
+========================================= */
+
+function $(id) {
+    return document.getElementById(id);
+}
+
+
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+
+function initials(value) {
+
+    return (
+        value ||
+        "?"
+    ).charAt(0).toUpperCase();
+
+}
+
+
+function formatTime(value) {
+
+    return new Date(value)
+        .toLocaleTimeString(
+            [],
+            {
+                hour: "2-digit",
+                minute: "2-digit"
+            }
+        );
+
+}
+
+
+function showToast(message) {
+
+    const toast = $("toast");
+
+    toast.textContent = message;
+
+    toast.style.opacity = "1";
+    toast.style.transform =
+        "translate(-50%,0)";
+
+    setTimeout(() => {
+
+        toast.style.opacity = "0";
+
+        toast.style.transform =
+            "translate(-50%,20px)";
+
+    }, 2200);
+
+}
+
+
+/* =========================================
+   AUTH UI
+========================================= */
+
+function showRegister() {
+
+    $("login-form")
+        .classList
+        .add("hidden");
+
+    $("register-form")
+        .classList
+        .remove("hidden");
+
+}
+
+
+function showLogin() {
+
+    $("register-form")
+        .classList
+        .add("hidden");
+
+    $("login-form")
+        .classList
+        .remove("hidden");
+
+}
+
+
+function instagramLogin() {
+
+    showToast(
+        "Instagram OAuth will be connected through the official Meta flow."
+    );
+
+}
+
+
+/* =========================================
+   REGISTER
+========================================= */
+
+async function register() {
+
+    const username =
+        $("register-username")
+            .value
+            .trim();
+
+    const email =
+        $("register-email")
+            .value
+            .trim();
+
+    const password =
+        $("register-password")
+            .value;
+
+    if (
+        !username ||
+        !email ||
+        !password
+    ) {
+
+        showToast(
+            "Complete all fields."
+        );
+
+        return;
+    }
+
+
+    if (username.length < 3) {
+
+        showToast(
+            "Username must contain at least 3 characters."
+        );
+
+        return;
+    }
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .auth
+            .signUp({
+                email,
+                password
+            });
+
+
+    if (error) {
+
+        showToast(error.message);
+
+        return;
+    }
+
+
+    if (!data.user) {
+
+        showToast(
+            "Check your email to continue."
+        );
+
+        return;
+    }
+
+
+    const {
+        error: profileError
+    } =
+        await supabaseClient
+            .from("profiles")
+            .insert({
+
+                id: data.user.id,
+
+                username,
+
+                display_name:
+                    username
+
+            });
+
+
+    if (profileError) {
+
+        showToast(
+            profileError.message
+        );
+
+        return;
+    }
+
+
+    showToast(
+        "Account created."
+    );
+
+    await initializeApp();
+
+}
+
+
+/* =========================================
+   LOGIN
+========================================= */
+
+async function login() {
+
+    const email =
+        $("login-email")
+            .value
+            .trim();
+
+    const password =
+        $("login-password")
+            .value;
+
+
+    const {
+        error
+    } =
+        await supabaseClient
+            .auth
+            .signInWithPassword({
+
+                email,
+
+                password
+
+            });
+
+
+    if (error) {
+
+        showToast(
+            error.message
+        );
+
+        return;
+    }
+
+
+    await initializeApp();
+
+}
+
+
+/* =========================================
+   INITIALIZE
+========================================= */
+
+async function initializeApp() {
+
+    const {
+        data: {
+            user
+        }
+    } =
+        await supabaseClient
+            .auth
+            .getUser();
+
+
+    if (!user) return;
+
+
+    currentUser = user;
+
+
+    $("auth").style.display =
+        "none";
+
+    $("app").style.display =
+        "block";
+
+
+    await loadProfile();
+
+    await setPresence(true);
+
+    await loadConversations();
+
+    await updateStats();
+
+    setupRealtime();
+
+}
+
+
+/* =========================================
+   PROFILE
+========================================= */
+
+async function loadProfile() {
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("profiles")
+            .select("*")
+            .eq(
+                "id",
+                currentUser.id
+            )
+            .single();
+
+
+    if (error) {
+
+        console.error(error);
+
+        return;
+    }
+
+
+    currentProfile = data;
+
+
+    $("profile-name").textContent =
+        data.display_name ||
+        data.username;
+
+
+    $("profile-username").textContent =
+        "@" + data.username;
+
+
+    $("profile-display-name").value =
+        data.display_name || "";
+
+
+    $("profile-bio").value =
+        data.bio || "";
+
+
+    renderProfileAvatar(
+        data
+    );
+
+}
+
+
+function renderProfileAvatar(profile) {
+
+    const avatar =
+        $("profile-avatar");
+
+
+    if (profile.avatar_url) {
+
+        avatar.innerHTML =
+            `<img src="${escapeHTML(
+                profile.avatar_url
+            )}">`;
+
+    } else {
+
+        avatar.textContent =
+            initials(
+                profile.display_name ||
+                profile.username
+            );
+
+    }
+
+}
+
+
+async function saveProfile() {
+
+    const displayName =
+        $("profile-display-name")
+            .value
+            .trim();
+
+
+    const bio =
+        $("profile-bio")
+            .value
+            .trim();
+
+
+    const {
+        error
+    } =
+        await supabaseClient
+            .from("profiles")
+            .update({
+
+                display_name:
+                    displayName,
+
+                bio
+
+            })
+            .eq(
+                "id",
+                currentUser.id
+            );
+
+
+    if (error) {
+
+        showToast(
+            error.message
+        );
+
+        return;
+    }
+
+
+    await loadProfile();
+
+    showToast(
+        "Profile updated."
+    );
+
+}
+
+
+/* =========================================
+   AVATAR UPLOAD
+========================================= */
+
+async function uploadAvatar() {
+
+    const file =
+        $("avatar-input")
+            .files[0];
+
+
+    if (!file) return;
+
+
+    const extension =
+        file.name
+            .split(".")
+            .pop()
+            .toLowerCase();
+
+
+    const path =
+        `${currentUser.id}/avatar.${extension}`;
+
+
+    const {
+        error
+    } =
+        await supabaseClient
+            .storage
+            .from("avatars")
+            .upload(
+                path,
+                file,
+                {
+                    upsert: true,
+                    contentType: file.type
+                }
+            );
+
+
+    if (error) {
+
+        showToast(
+            error.message
+        );
+
+        return;
+    }
+
+
+    const {
+        data
+    } =
+        supabaseClient
+            .storage
+            .from("avatars")
+            .getPublicUrl(
+                path
+            );
+
+
+    const avatarURL =
+        data.publicUrl +
+        "?v=" +
+        Date.now();
+
+
+    const {
+        error: updateError
+    } =
+        await supabaseClient
+            .from("profiles")
+            .update({
+                avatar_url:
+                    avatarURL
+            })
+            .eq(
+                "id",
+                currentUser.id
+            );
+
+
+    if (updateError) {
+
+        showToast(
+            updateError.message
+        );
+
+        return;
+    }
+
+
+    await loadProfile();
+
+    await loadConversations();
+
+    showToast(
+        "Avatar updated."
+    );
+
+}
+
+
+/* =========================================
+   PRESENCE
+========================================= */
+
+async function setPresence(isOnline) {
+
+    if (!currentUser) return;
+
+
+    await supabaseClient
+        .from("profiles")
+        .update({
+
+            is_online:
+                isOnline,
+
+            last_seen:
+                new Date()
+                    .toISOString()
+
+        })
+        .eq(
+            "id",
+            currentUser.id
+        );
+
+}
+
+
+/* =========================================
+   CONVERSATIONS
+========================================= */
+
+async function loadConversations() {
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("conversation_members")
+            .select(
+                "conversation_id, conversations(id,updated_at)"
+            )
+            .eq(
+                "user_id",
+                currentUser.id
+            );
+
+
+    if (error) {
+
+        console.error(error);
+
+        return;
+    }
+
+
+    const container =
+        $("chat-items");
+
+
+    container.innerHTML = "";
+
+
+    for (
+        const member
+        of data || []
+    ) {
+
+        const conversation =
+            member.conversations;
+
+
+        if (!conversation)
+            continue;
+
+
+        const {
+            data: members
+        } =
+            await supabaseClient
+                .from(
+                    "conversation_members"
+                )
+                .select("user_id")
+                .eq(
+                    "conversation_id",
+                    conversation.id
+                );
+
+
+        const otherMember =
+            (members || [])
+                .find(
+                    x =>
+                        x.user_id !==
+                        currentUser.id
+                );
+
+
+        if (!otherMember)
+            continue;
+
+
+        const {
+            data: other
+        } =
+            await supabaseClient
+                .from("profiles")
+                .select("*")
+                .eq(
+                    "id",
+                    otherMember.user_id
+                )
+                .single();
+
+
+        if (!other)
+            continue;
+
+
+        const {
+            data: lastMessage
+        } =
+            await supabaseClient
+                .from("messages")
+                .select("*")
+                .eq(
+                    "conversation_id",
+                    conversation.id
+                )
+                .order(
+                    "created_at",
+                    {
+                        ascending: false
+                    }
+                )
+                .limit(1)
+                .maybeSingle();
+
+
+        renderConversation(
+            container,
+            conversation,
+            other,
+            lastMessage
+        );
+
+    }
+
+}
+
+
+function renderConversation(
+    container,
+    conversation,
+    other,
+    lastMessage
+) {
+
+    const item =
+        document.createElement(
+            "div"
+        );
+
+
+    item.className =
+        "chat-item";
+
+
+    if (
+        currentConversation &&
+        currentConversation.id ===
+        conversation.id
+    ) {
+
+        item.classList.add(
+            "active"
+        );
+
+    }
+
+
+    const avatar =
+        other.avatar_url
+
+            ?
+
+        `<img src="${escapeHTML(
+            other.avatar_url
+        )}">`
+
+            :
+
+        initials(
+            other.display_name ||
+            other.username
+        );
+
+
+    let preview =
+        "Start a conversation";
+
+
+    if (lastMessage) {
+
+        preview =
+            lastMessage.message_type ===
+            "image"
+
+                ?
+
+            "Photo"
+
+                :
+
+            lastMessage.content;
+
+    }
+
+
+    item.innerHTML = `
+
+        <div class="avatar">
+
+            ${avatar}
+
+            ${
+                other.is_online
+                    ?
+                `<span class="online-dot"></span>`
+                    :
+                ""
+            }
+
+        </div>
+
+
+        <div class="chat-info">
+
+            <div class="chat-top">
+
+                <div class="chat-name">
+
+                    ${escapeHTML(
+                        other.display_name ||
+                        other.username
+                    )}
+
+                </div>
+
+                <div class="chat-time">
+
+                    ${
+                        lastMessage
+                            ?
+                        formatTime(
+                            lastMessage.created_at
+                        )
+                            :
+                        ""
+                    }
+
+                </div>
+
+            </div>
+
+
+            <div class="chat-preview">
+
+                ${escapeHTML(
+                    preview
+                )}
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    item.onclick =
+        () =>
+            openConversation(
+                conversation,
+                other
+            );
+
+
+    container.appendChild(
+        item
+    );
+
+}
+
+
+/* =========================================
+   SEARCH USERS
+========================================= */
+
+async function searchUsers() {
+
+    const query =
+        $("user-search")
+            .value
+            .trim();
+
+
+    if (!query) {
+
+        await loadConversations();
+
+        return;
+    }
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("profiles")
+            .select("*")
+            .ilike(
+                "username",
+                `%${query}%`
+            )
+            .neq(
+                "id",
+                currentUser.id
+            )
+            .limit(20);
+
+
+    if (error) {
+
+        console.error(error);
+
+        return;
+    }
+
+
+    const container =
+        $("chat-items");
+
+
+    container.innerHTML = "";
+
+
+    (data || [])
+        .forEach(
+            profile => {
+
+                const item =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                item.className =
+                    "chat-item";
+
+
+                const avatar =
+                    profile.avatar_url
+
+                        ?
+
+                    `<img src="${escapeHTML(
+                        profile.avatar_url
+                    )}">`
+
+                        :
+
+                    initials(
+                        profile.display_name ||
+                        profile.username
+                    );
+
+
+                item.innerHTML = `
+
+                    <div class="avatar">
+
+                        ${avatar}
+
+                    </div>
+
+
+                    <div class="chat-info">
+
+                        <div class="chat-name">
+
+                            ${escapeHTML(
+                                profile.display_name ||
+                                profile.username
+                            )}
+
+                        </div>
+
+                        <div class="chat-preview">
+
+                            @${escapeHTML(
+                                profile.username
+                            )}
+
+                        </div>
+
+                    </div>
+
+                `;
+
+
+                item.onclick =
+                    () =>
+                        startConversation(
+                            profile
+                        );
+
+
+                container.appendChild(
+                    item
+                );
+
+            }
+        );
+
+}
+
+
+/* =========================================
+   CREATE / FIND CONVERSATION
+========================================= */
+
+async function startConversation(
+    other
+) {
+
+    const {
+        data: myConversations
+    } =
+        await supabaseClient
+            .from(
+                "conversation_members"
+            )
+            .select(
+                "conversation_id"
+            )
+            .eq(
+                "user_id",
+                currentUser.id
+            );
+
+
+    for (
+        const member
+        of myConversations || []
+    ) {
+
+        const {
+            data: matching
+        } =
+            await supabaseClient
+                .from(
+                    "conversation_members"
+                )
+                .select("user_id")
+                .eq(
+                    "conversation_id",
+                    member.conversation_id
+                )
+                .eq(
+                    "user_id",
+                    other.id
+                )
+                .maybeSingle();
+
+
+        if (matching) {
+
+            const {
+                data: conversation
+            } =
+                await supabaseClient
+                    .from(
+                        "conversations"
+                    )
+                    .select("*")
+                    .eq(
+                        "id",
+                        member.conversation_id
+                    )
+                    .single();
+
+
+            await openConversation(
+                conversation,
+                other
+            );
+
+            return;
+        }
+
+    }
+
+
+    const {
+        data: conversation,
+        error
+    } =
+        await supabaseClient
+            .from("conversations")
+            .insert({})
+            .select()
+            .single();
+
+
+    if (error) {
+
+        showToast(
+            error.message
+        );
+
+        return;
+    }
+
+
+    const {
+        error: memberError
+    } =
+        await supabaseClient
+            .from(
+                "conversation_members"
+            )
+            .insert([
+
+                {
+                    conversation_id:
+                        conversation.id,
+
+                    user_id:
+                        currentUser.id
+                },
+
+                {
+                    conversation_id:
+                        conversation.id,
+
+                    user_id:
+                        other.id
+                }
+
+            ]);
+
+
+    if (memberError) {
+
+        showToast(
+            memberError.message
+        );
+
+        return;
+    }
+
+
+    await loadConversations();
+
+
+    await openConversation(
+        conversation,
+        other
+    );
+
+}
+
+
+/* =========================================
+   OPEN CHAT
+========================================= */
+
+async function openConversation(
+    conversation,
+    other
+) {
+
+    currentConversation =
+        conversation;
+
+    currentOtherUser =
+        other;
+
+
+    $("messages-panel")
+        .classList
+        .add("open");
+
+
+    $("chat-name")
+        .textContent =
+        other.display_name ||
+        other.username;
+
+
+    updateChatStatus(
+        other
+    );
+
+
+    renderChatAvatar(
+        other
+    );
+
+
+    await loadMessages();
+
+    await markMessagesRead();
+
+    await loadConversations();
+
+}
+
+
+function renderChatAvatar(
+    profile
+) {
+
+    const avatar =
+        $("chat-avatar");
+
+
+    if (profile.avatar_url) {
+
+        avatar.innerHTML =
+            `<img src="${escapeHTML(
+                profile.avatar_url
+            )}">`;
+
+    } else {
+
+        avatar.textContent =
+            initials(
+                profile.display_name ||
+                profile.username
+            );
+
+    }
+
+}
+
+
+function updateChatStatus(
+    profile
+) {
+
+    const status =
+        $("chat-status");
+
+
+    if (profile.is_online) {
+
+        status.textContent =
+            "Online";
+
+        status.className =
+            "status online";
+
+        return;
+    }
+
+
+    if (profile.last_seen) {
+
+        status.textContent =
+            "Last seen " +
+            new Date(
+                profile.last_seen
+            ).toLocaleString();
+
+    } else {
+
+        status.textContent =
+            "Offline";
+
+    }
+
+
+    status.className =
+        "status";
+
+}
+
+
+function closeChat() {
+
+    currentConversation =
+        null;
+
+    currentOtherUser =
+        null;
+
+
+    $("messages-panel")
+        .classList
+        .remove("open");
+
+}
+
+
+/* =========================================
+   LOAD MESSAGES
+========================================= */
+
+async function loadMessages() {
+
+    if (!currentConversation)
+        return;
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("messages")
+            .select("*")
+            .eq(
+                "conversation_id",
+                currentConversation.id
+            )
+            .order(
+                "created_at",
+                {
+                    ascending: true
+                }
+            );
+
+
+    if (error) {
+
+        console.error(error);
+
+        return;
+    }
+
+
+    const container =
+        $("messages");
+
+
+    container.innerHTML = "";
+
+
+    if (!data || !data.length) {
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <strong>
+                    Start the conversation
+                </strong>
+
+                <span>
+                    Send the first message.
+                </span>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    for (
+        const message
+        of data
+    ) {
+
+        await renderMessage(
+            message
+        );
+
+    }
+
+
+    scrollMessages();
+
+}
+
+
+/* =========================================
+   RENDER MESSAGE
+========================================= */
+
+async function renderMessage(
+    message
+) {
+
+    const row =
+        document.createElement(
+            "div"
+        );
+
+
+    row.className =
+        "message-row" +
+        (
+            message.sender_id ===
+            currentUser.id
+
+                ?
+
+            " mine"
+
+                :
+
+            ""
+        );
+
+
+    const wrap =
+        document.createElement(
+            "div"
+        );
+
+
+    wrap.className =
+        "message-wrap";
+
+
+    let content = "";
+
+
+    if (
+        message.message_type ===
+        "image" &&
+        message.media_path
+    ) {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .storage
+                .from("chat-media")
+                .createSignedUrl(
+                    message.media_path,
+                    60 * 60
+                );
+
+
+        if (!error && data) {
+
+            content = `
+
+                <img
+                    class="message-image"
+                    src="${escapeHTML(
+                        data.signedUrl
+                    )}"
+                    alt="Shared image"
+                    loading="lazy"
+                >
+
+            `;
+
+        }
+
+    } else {
+
+        content =
+            escapeHTML(
+                message.content
+            );
+
+    }
+
+
+    let seen = false;
+
+
+    if (
+        message.sender_id ===
+        currentUser.id
+    ) {
+
+        const {
+            data
+        } =
+            await supabaseClient
+                .from("message_reads")
+                .select("user_id")
+                .eq(
+                    "message_id",
+                    message.id
+                )
+                .eq(
+                    "user_id",
+                    currentOtherUser?.id
+                )
+                .maybeSingle();
+
+
+        seen = !!data;
+
+    }
+
+
+    wrap.innerHTML = `
+
+        <div class="message-bubble">
+
+            ${content}
+
+            <span class="message-time">
+
+                ${formatTime(
+                    message.created_at
+                )}
+
+            </span>
+
+        </div>
+
+
+        ${
+            seen
+
+                ?
+
+            `
+                <div class="message-seen">
+                    Seen
+                </div>
+            `
+
+                :
+
+            ""
+        }
+
+
+        <div class="message-actions">
+
+            <button
+                onclick="reactToMessage(
+                    '${message.id}',
+                    '♥'
+                )"
+            >
+                ♥
+            </button>
+
+
+            <button
+                onclick="reactToMessage(
+                    '${message.id}',
+                    '+1'
+                )"
+            >
+                +
+            </button>
+
+
+            ${
+                message.sender_id ===
+                currentUser.id
+
+                    ?
+
+                `
+                    <button
+                        onclick="deleteMessage(
+                            '${message.id}'
+                        )"
+                    >
+                        ×
+                    </button>
+                `
+
+                    :
+
+                ""
+            }
+
+        </div>
+
+    `;
+
+
+    row.appendChild(
+        wrap
+    );
+
+
+    $("messages")
+        .appendChild(
+            row
+        );
+
+}
+
+
+/* =========================================
+   SEND TEXT
+========================================= */
+
+async function sendMessage() {
+
+    if (!currentConversation) {
+
+        showToast(
+            "Select a conversation."
+        );
+
+        return;
+    }
+
+
+    const input =
+        $("message-input");
+
+
+    const content =
+        input.value.trim();
+
+
+    if (!content)
+        return;
+
+
+    input.value = "";
+
+
+    const {
+        error
+    } =
+        await supabaseClient
+            .from("messages")
+            .insert({
+
+                conversation_id:
+                    currentConversation.id,
+
+                sender_id:
+                    currentUser.id,
+
+                content,
+
+                message_type:
+                    "text"
+
+            });
+
+
+    if (error) {
+
+        showToast(
+            error.message
+        );
+
+        return;
+    }
+
+
+    await createNotification(
+        content
+    );
+
+
+    stopTyping();
+
+
+    await loadMessages();
+
+    await loadConversations();
+
+    await updateStats();
+
+    scrollMessages();
+
+}
+
+
+/* =========================================
+   SEND IMAGE
+========================================= */
+
+async function sendImage() {
+
+    const file =
+        $("image-input")
+            .files[0];
+
+
+    if (
+        !file ||
+        !currentConversation
+    )
+        return;
+
+
+    if (
+        !file.type.startsWith(
+            "image/"
+        )
+    ) {
+
+        showToast(
+            "Only images are supported."
+        );
+
+        return;
+    }
+
+
+    if (
+        file.size >
+        10 * 1024 * 1024
+    ) {
+
+        showToast(
+            "Image must be under 10 MB."
+        );
+
+        return;
+    }
+
+
+    const extension =
+        file.name
+            .split(".")
+            .pop()
+            .toLowerCase();
+
+
+    const path =
+        `${currentUser.id}/${crypto.randomUUID()}.${extension}`;
+
+
+    const {
+        error
+    } =
+        await supabaseClient
+            .storage
+            .from("chat-media")
+            .upload(
+                path,
+                file,
+                {
+                    contentType:
+                        file.type
+                }
+            );
+
+
+    if (error) {
+
+        showToast(
+            error.message
+        );
+
+        return;
+    }
+
+
+    const {
+        error: messageError
+    } =
+        await supabaseClient
+            .from("messages")
+            .insert({
+
+                conversation_id:
+                    currentConversation.id,
+
+                sender_id:
+                    currentUser.id,
+
+                content: "",
+
+                message_type:
+                    "image",
+
+                media_path:
+                    path
+
+            });
+
+
+    if (messageError) {
+
+        showToast(
+            messageError.message
+        );
+
+        return;
+    }
+
+
+    $("image-input")
+        .value = "";
+
+
+    await createNotification(
+        "Photo"
+    );
+
+
+    await loadMessages();
+
+    await loadConversations();
+
+    scrollMessages();
+
+}
+
+
+/* =========================================
+   DELETE
+========================================= */
+
+async function deleteMessage(
+    messageId
+) {
+
+    const {
+        error
+    } =
+        await supabaseClient
+            .from("messages")
+            .delete()
+            .eq(
+                "id",
+                messageId
+            )
+            .eq(
+                "sender_id",
+                currentUser.id
+            );
+
+
+    if (error) {
+
+        showToast(
+            error.message
+        );
+
+        return;
+    }
+
+
+    await loadMessages();
+
+    await loadConversations();
+
+}
+
+
+/* =========================================
+   REACTIONS
+========================================= */
+
+async function reactToMessage(
+    messageId,
+    reaction
+) {
+
+    const {
+        error
+    } =
+        await supabaseClient
+            .from(
+                "message_reactions"
+            )
+            .upsert(
+
+                {
+                    message_id:
+                        messageId,
+
+                    user_id:
+                        currentUser.id,
+
+                    reaction
+
+                },
+
+                {
+                    onConflict:
+                        "message_id,user_id"
+                }
+
+            );
+
+
+    if (error) {
+
+        showToast(
+            error.message
+        );
+
+        return;
+    }
+
+
+    showToast(
+        "Reaction added."
+    );
+
+}
+
+
+/* =========================================
+   READ
+========================================= */
+
+async function markMessagesRead() {
+
+    if (!currentConversation)
+        return;
+
+
+    const {
+        data
+    } =
+        await supabaseClient
+            .from("messages")
+            .select("id")
+            .eq(
+                "conversation_id",
+                currentConversation.id
+            )
+            .neq(
+                "sender_id",
+                currentUser.id
+            );
+
+
+    if (!data?.length)
+        return;
+
+
+    await supabaseClient
+        .from("message_reads")
+        .upsert(
+
+            data.map(
+                message => ({
+
+                    message_id:
+                        message.id,
+
+                    user_id:
+                        currentUser.id
+
+                })
+            ),
+
+            {
+                onConflict:
+                    "message_id,user_id"
+            }
+
+        );
+
+}
+
+
+/* =========================================
+   NOTIFICATIONS
+========================================= */
+
+async function createNotification(
+    body
+) {
+
+    if (
+        !currentOtherUser ||
+        !currentConversation
+    )
+        return;
+
+
+    await supabaseClient
+        .from("notifications")
+        .insert({
+
+            user_id:
+                currentOtherUser.id,
+
+            type:
+                "message",
+
+            title:
+                currentProfile?.display_name ||
+                currentProfile?.username ||
+                "New message",
+
+            body,
+
+            conversation_id:
+                currentConversation.id
+
+        });
+
+}
+
+
+/* =========================================
+   TYPING
+========================================= */
+
+function sendTyping() {
+
+    if (
+        !realtimeChannel ||
+        !currentConversation
+    )
+        return;
+
+
+    if (!isTyping) {
+
+        isTyping = true;
+
+
+        realtimeChannel.send({
+
+            type: "broadcast",
+
+            event: "typing",
+
+            payload: {
+
+                user_id:
+                    currentUser.id,
+
+                typing:
+                    true
+
+            }
+
+        });
+
+    }
+
+
+    clearTimeout(
+        typingTimeout
+    );
+
+
+    typingTimeout =
+        setTimeout(
+            stopTyping,
+            1000
+        );
+
+}
+
+
+function stopTyping() {
+
+    if (!isTyping)
+        return;
+
+
+    isTyping = false;
+
+
+    if (
+        realtimeChannel
+    ) {
+
+        realtimeChannel.send({
+
+            type: "broadcast",
+
+            event: "typing",
+
+            payload: {
+
+                user_id:
+                    currentUser.id,
+
+                typing:
+                    false
+
+            }
+
+        });
+
+    }
+
+}
+
+
+function handleMessageKey(
+    event
+) {
+
+    if (
+        event.key ===
+        "Enter"
+    ) {
+
+        event.preventDefault();
+
+        sendMessage();
+
+    }
+
+}
+
+
+/* =========================================
+   REALTIME
+========================================= */
+
+function setupRealtime() {
+
+    if (realtimeChannel) {
+
+        supabaseClient
+            .removeChannel(
+                realtimeChannel
+            );
+
+    }
+
+
+    realtimeChannel =
+        supabaseClient
+            .channel(
+                "focusdm-realtime"
+            )
+
+
+            .on(
+
+                "postgres_changes",
+
+                {
+                    event: "*",
+                    schema: "public",
+                    table: "messages"
+                },
+
+                async payload => {
+
+                    const conversationId =
+                        payload.new?.conversation_id ||
+                        payload.old?.conversation_id;
+
+
+                    if (
+                        currentConversation &&
+                        conversationId ===
+                        currentConversation.id
+                    ) {
+
+                        await loadMessages();
+
+                    }
+
+
+                    await loadConversations();
+
+                }
+
+            )
+
+
+            .on(
+
+                "broadcast",
+
+                {
+                    event: "typing"
+                },
+
+                payload => {
+
+                    if (
+                        payload.payload?.user_id ===
+                        currentUser.id
+                    )
+                        return;
+
+
+                    $("typing").textContent =
+                        payload.payload?.typing
+
+                            ?
+
+                        (
+                            currentOtherUser
+                                ?.display_name ||
+                            currentOtherUser
+                                ?.username ||
+                            "User"
+                        ) +
+                        " is typing..."
+
+                            :
+
+                        "";
+
+                }
+
+            )
+
+
+            .subscribe();
+
+}
+
+
+/* =========================================
+   FOCUS
+========================================= */
+
+function toggleFocus() {
+
+    focusActive =
+        !focusActive;
+
+
+    const button =
+        $("focus-button");
+
+
+    if (focusActive) {
+
+        focusStart =
+            Date.now();
+
+
+        button.textContent =
+            "End focus mode";
+
+
+        button.classList.add(
+            "stop"
+        );
+
+
+        clearInterval(
+            focusInterval
+        );
+
+
+        focusInterval =
+            setInterval(
+                updateTimer,
+                1000
+            );
+
+
+    } else {
+
+        clearInterval(
+            focusInterval
+        );
+
+
+        button.textContent =
+            "Start focus mode";
+
+
+        button.classList.remove(
+            "stop"
+        );
+
+
+        localStorage.focusSessions =
+            Number(
+                localStorage.focusSessions ||
+                0
+            ) + 1;
+
+
+        updateStats();
+
+    }
+
+}
+
+
+function updateTimer() {
+
+    const seconds =
+        Math.floor(
+            (
+                Date.now() -
+                focusStart
+            ) / 1000
+        );
+
+
+    const hours =
+        Math.floor(
+            seconds / 3600
+        );
+
+
+    const minutes =
+        Math.floor(
+            (
+                seconds % 3600
+            ) / 60
+        );
+
+
+    const secs =
+        seconds % 60;
+
+
+    $("timer")
+        .textContent =
+
+        [
+            hours,
+            minutes,
+            secs
+        ]
+
+            .map(
+                value =>
+                    String(value)
+                        .padStart(
+                            2,
+                            "0"
+                        )
+            )
+
+            .join(":");
+
+}
+
+
+/* =========================================
+   STATISTICS
+========================================= */
+
+async function updateStats() {
+
+    if (!currentUser)
+        return;
+
+
+    const start =
+        new Date();
+
+
+    start.setHours(
+        0,
+        0,
+        0,
+        0
+    );
+
+
+    const {
+        count: messages
+    } =
+        await supabaseClient
+            .from("messages")
+            .select(
+                "id",
+                {
+                    count: "exact",
+                    head: true
+                }
+            )
+            .eq(
+                "sender_id",
+                currentUser.id
+            )
+            .gte(
+                "created_at",
+                start.toISOString()
+            );
+
+
+    $("today-messages")
+        .textContent =
+        messages || 0;
+
+
+    const {
+        data: conversations
+    } =
+        await supabaseClient
+            .from(
+                "conversation_members"
+            )
+            .select(
+                "conversation_id"
+            )
+            .eq(
+                "user_id",
+                currentUser.id
+            );
+
+
+    $("conversation-count")
+        .textContent =
+        conversations?.length ||
+        0;
+
+
+    $("focus-sessions")
+        .textContent =
+        Number(
+            localStorage.focusSessions ||
+            0
+        );
+
+}
+
+
+/* =========================================
+   NAVIGATION
+========================================= */
+
+function navigate(
+    pageId
+) {
+
+    document
+        .querySelectorAll(
+            ".page"
+        )
+        .forEach(
+            page =>
+                page.classList.remove(
+                    "active"
+                )
+        );
+
+
+    $(pageId)
+        .classList
+        .add("active");
+
+
+    document
+        .querySelectorAll(
+            "[data-page]"
+        )
+        .forEach(
+            button =>
+                button.classList.toggle(
+                    "active",
+                    button.dataset.page ===
+                    pageId
+                )
+        );
+
+}
+
+
+/* =========================================
+   SCROLL
+========================================= */
+
+function scrollMessages() {
+
+    const container =
+        $("messages");
+
+
+    container.scrollTop =
+        container.scrollHeight;
+
+}
+
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+async function logout() {
+
+    await setPresence(
+        false
+    );
+
+
+    await supabaseClient
+        .auth
+        .signOut();
+
+
+    location.reload();
+
+}
+
+
+/* =========================================
+   LIFECYCLE
+========================================= */
+
+window.addEventListener(
+    "beforeunload",
+    () => {
+
+        if (currentUser) {
+
+            setPresence(
+                false
+            );
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "visibilitychange",
+    () => {
+
+        if (!currentUser)
+            return;
+
+
+        setPresence(
+            document.visibilityState ===
+            "visible"
+        );
+
+    }
+);
+
+
+/* =========================================
+   AUTH STATE
+========================================= */
+
+supabaseClient
+    .auth
+    .onAuthStateChange(
+        (
+            event,
+            session
+        ) => {
+
+            if (
+                session &&
+                !currentUser
+            ) {
+
+                initializeApp();
+
+            }
+
+        }
+    );
+
+
+/* =========================================
+   START
+========================================= */
+
+(async () => {
+
+    const {
+        data: {
+            session
+        }
+    } =
+        await supabaseClient
+            .auth
+            .getSession();
+
+
+    if (session) {
+
+        await initializeApp();
+
+    }
+
+})();
+
+
+/* =========================================
+   SERVICE WORKER
+========================================= */
+
+if (
+    "serviceWorker"
+    in navigator
+) {
+
+    window.addEventListener(
+        "load",
+        () => {
+
+            navigator
+                .serviceWorker
+                .register(
+                    "sw.js"
+                )
+                .catch(
+                    console.error
+                );
+
+        }
+    );
+
+}
+
+</script>
+
+</body>
+</html>
