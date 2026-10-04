@@ -5009,14 +5009,25 @@ function closeInstagramModal() {
 ========================================= */
 
 function startInstagramOAuth() {
+    const instagramUrl =
+        "https://www.instagram.com/oauth/authorize" +
+        "?force_reauth=true" +
+        "&client_id=28517704037889320" +
+        "&redirect_uri=" +
+        encodeURIComponent(
+            "https://nurasylsh2012-sys.github.io/FocusDM/"
+        ) +
+        "&response_type=code" +
+        "&scope=" +
+        encodeURIComponent(
+            "instagram_business_basic," +
+            "instagram_business_manage_messages," +
+            "instagram_business_manage_comments," +
+            "instagram_business_content_publish," +
+            "instagram_business_manage_insights"
+        );
 
-    closeInstagramModal();
-
-
-    showToast(
-        "Instagram OAuth will be connected through the official Meta flow."
-    );
-
+    window.location.href = instagramUrl;
 }
 
 
@@ -5098,7 +5109,54 @@ if (
         };
 
 }
+async function handleInstagramCallback() {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
 
+    if (!code) return;
+
+    showToast("Connecting Instagram...");
+
+    try {
+        const response = await fetch(
+            "https://tlhbigyyvdnyysppguau.supabase.co/functions/v1/instagram-login",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    code: code
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        console.log("Instagram login:", data);
+
+        if (!response.ok || !data.success) {
+            showToast("Instagram login failed");
+            console.error(data);
+            return;
+        }
+
+        if (data.action_link) {
+            window.location.href = data.action_link;
+            return;
+        }
+
+        showToast("Instagram connected successfully!");
+
+    } catch (error) {
+        console.error(error);
+        showToast("Could not connect Instagram");
+    }
+}
+
+if (window.location.search.includes("code=")) {
+    handleInstagramCallback();
+}
 </script>
 </body>
 </html>
