@@ -5112,7 +5112,7 @@ if (
         };
 
 }
-async function handleInstagramCallback() {
+ async function handleInstagramCallback() {
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
 
@@ -5142,6 +5142,13 @@ async function handleInstagramCallback() {
             showToast("Instagram login failed");
             console.error(data);
             return;
+        }
+
+        if (data.instagram) {
+            localStorage.setItem(
+                "focusdm_instagram",
+                JSON.stringify(data.instagram)
+            );
         }
 
         if (data.action_link) {
