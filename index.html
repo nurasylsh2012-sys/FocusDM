@@ -5008,15 +5008,16 @@ function closeInstagramModal() {
    INSTAGRAM OAUTH PLACEHOLDER
 ========================================= */
 
-function startInstagramOAuth() {
+ function startInstagramOAuth() {
+    const redirectUri =
+        "https://nurasylsh2012-sys.github.io/FocusDM/";
+
     const instagramUrl =
         "https://www.instagram.com/oauth/authorize" +
         "?force_reauth=true" +
         "&client_id=28517704037889320" +
         "&redirect_uri=" +
-        encodeURIComponent(
-            "https://nurasylsh2012-sys.github.io/FocusDM/"
-        ) +
+        encodeURIComponent(redirectUri) +
         "&response_type=code" +
         "&scope=" +
         encodeURIComponent(
@@ -5027,9 +5028,11 @@ function startInstagramOAuth() {
             "instagram_business_manage_insights"
         );
 
+    console.log("REDIRECT URI:", redirectUri);
+    console.log("INSTAGRAM URL:", instagramUrl);
+
     window.location.href = instagramUrl;
 }
-
 
 /* =========================================
    REPLACE OLD INSTAGRAM LOGIN
