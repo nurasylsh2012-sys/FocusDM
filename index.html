@@ -1961,7 +1961,44 @@ async function register() {
     );
 
     await initializeApp();
+function loadInstagramProfile() {
+    const saved = localStorage.getItem("focusdm_instagram");
 
+    if (!saved) return;
+
+    try {
+        const instagram = JSON.parse(saved);
+
+        const avatar = document.getElementById("profile-avatar");
+        const name = document.getElementById("profile-name");
+        const username = document.getElementById("profile-username");
+
+        if (instagram.username) {
+            name.textContent = instagram.username;
+            username.textContent = "@" + instagram.username;
+        }
+
+        if (instagram.profile_picture_url) {
+            avatar.innerHTML = `
+                <img
+                    src="${instagram.profile_picture_url}"
+                    alt="Instagram avatar"
+                    style="
+                        width:100%;
+                        height:100%;
+                        object-fit:cover;
+                        border-radius:50%;
+                    "
+                >
+            `;
+        }
+
+    } catch (error) {
+        console.error("Instagram profile error:", error);
+    }
+}
+
+loadInstagramProfile();
 }
 
 
